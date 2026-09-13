@@ -1,5 +1,4 @@
 import {
-  useMemo,
   useRef,
   useState,
 } from "react";
@@ -20,6 +19,7 @@ const WHITE = "#ffffff";
 
 /* =========================================================
    CENTRAL 3D WORDPRESS CORE
+   DESKTOP ONLY
 ========================================================= */
 
 function WordPressCore({
@@ -30,54 +30,37 @@ function WordPressCore({
   const outer = useRef();
   const inner = useRef();
 
-  useFrame(
-    (state, delta) => {
-      if (!group.current)
-        return;
+  useFrame((state, delta) => {
+    if (!group.current) return;
 
-      const t =
-        state.clock.elapsedTime;
+    const t = state.clock.elapsedTime;
 
-      if (!reduced) {
-        group.current.rotation.y +=
-          delta * 0.14;
+    if (!reduced) {
+      group.current.rotation.y += delta * 0.14;
 
-        group.current.rotation.x =
-          Math.sin(t * 0.4) *
-          0.025;
-      }
-
-      const pulse =
-        1 +
-        Math.sin(t * 2.1) *
-          0.025;
-
-      outer.current?.scale.setScalar(
-        active
-          ? 1.1
-          : pulse
-      );
-
-      inner.current?.scale.setScalar(
-        active
-          ? 1.05
-          : 1
-      );
+      group.current.rotation.x =
+        Math.sin(t * 0.4) * 0.025;
     }
-  );
+
+    const pulse =
+      1 +
+      Math.sin(t * 2.1) * 0.025;
+
+    outer.current?.scale.setScalar(
+      active ? 1.1 : pulse
+    );
+
+    inner.current?.scale.setScalar(
+      active ? 1.05 : 1
+    );
+  });
 
   return (
     <group ref={group}>
-      {/* =================================================
-          Outer wire shell
-      ================================================= */}
-
+      {/* Outer wire shell */}
       <mesh ref={outer}>
         <icosahedronGeometry
-          args={[
-            1.05,
-            2,
-          ]}
+          args={[1.05, 2]}
         />
 
         <meshBasicMaterial
@@ -88,26 +71,17 @@ function WordPressCore({
         />
       </mesh>
 
-      {/* =================================================
-          Glass sphere
-      ================================================= */}
-
+      {/* Glass sphere */}
       <mesh ref={inner}>
         <sphereGeometry
-          args={[
-            0.72,
-            40,
-            40,
-          ]}
+          args={[0.72, 40, 40]}
         />
 
         <meshStandardMaterial
           color={WHITE}
           emissive={ACCENT}
           emissiveIntensity={
-            active
-              ? 0.8
-              : 0.42
+            active ? 0.8 : 0.42
           }
           roughness={0.15}
           metalness={0.05}
@@ -116,17 +90,10 @@ function WordPressCore({
         />
       </mesh>
 
-      {/* =================================================
-          Inner blue energy
-      ================================================= */}
-
+      {/* Inner blue energy */}
       <mesh>
         <sphereGeometry
-          args={[
-            0.38,
-            32,
-            32,
-          ]}
+          args={[0.38, 32, 32]}
         />
 
         <meshBasicMaterial
@@ -136,10 +103,7 @@ function WordPressCore({
         />
       </mesh>
 
-      {/* =================================================
-          Small floating rings around core
-      ================================================= */}
-
+      {/* Core ring */}
       <mesh
         rotation={[
           Math.PI / 2,
@@ -163,6 +127,7 @@ function WordPressCore({
         />
       </mesh>
 
+      {/* Secondary ring */}
       <mesh
         rotation={[
           0.7,
@@ -189,8 +154,10 @@ function WordPressCore({
   );
 }
 
+
 /* =========================================================
-   LARGE ORBIT SYSTEM
+   ORBIT SYSTEM
+   DESKTOP ONLY
 ========================================================= */
 
 function OrbitSystem({
@@ -198,26 +165,24 @@ function OrbitSystem({
 }) {
   const group = useRef();
 
-  useFrame(
-    (state, delta) => {
-      if (
-        !group.current ||
-        reduced
-      )
-        return;
-
-      group.current.rotation.z +=
-        delta * 0.015;
-
-      group.current.rotation.y +=
-        delta * 0.01;
+  useFrame((state, delta) => {
+    if (
+      !group.current ||
+      reduced
+    ) {
+      return;
     }
-  );
+
+    group.current.rotation.z +=
+      delta * 0.015;
+
+    group.current.rotation.y +=
+      delta * 0.01;
+  });
 
   return (
     <group ref={group}>
       {/* Main orbit */}
-
       <mesh
         rotation={[
           Math.PI / 2.3,
@@ -242,7 +207,6 @@ function OrbitSystem({
       </mesh>
 
       {/* Secondary orbit */}
-
       <mesh
         rotation={[
           Math.PI / 1.9,
@@ -267,7 +231,6 @@ function OrbitSystem({
       </mesh>
 
       {/* Outer orbit */}
-
       <mesh
         rotation={[
           Math.PI / 2,
@@ -294,210 +257,149 @@ function OrbitSystem({
   );
 }
 
+
 /* =========================================================
-   PARTICLE FIELD
+   PARTICLES
 ========================================================= */
 
 function ParticleField({
   count,
   reduced,
 }) {
-  const ref = useRef();
+  const points = useRef();
 
-  const positions = useMemo(() => {
-    const array =
-      new Float32Array(
-        count * 3
-      );
-
-    for (
-      let i = 0;
-      i < count;
-      i++
-    ) {
-      const angle =
-        Math.random() *
-        Math.PI *
-        2;
-
-      const radius =
-        2.5 +
-        Math.random() *
-          4.5;
-
-      array[i * 3] =
-        Math.cos(angle) *
-        radius;
-
-      array[i * 3 + 1] =
-        (Math.random() - 0.5) *
-        5;
-
-      array[i * 3 + 2] =
-        (Math.random() - 0.5) *
-        4;
-    }
-
-    return array;
-  }, [count]);
-
-  useFrame(
-    (state, delta) => {
-      if (
-        !ref.current ||
-        reduced
-      )
-        return;
-
-      ref.current.rotation.y +=
-        delta * 0.008;
-    }
+  const positions = useRef(
+    new Float32Array(count * 3)
   );
 
+  if (
+    positions.current.length !==
+    count * 3
+  ) {
+    positions.current =
+      new Float32Array(count * 3);
+  }
+
+  for (
+    let i = 0;
+    i < count;
+    i++
+  ) {
+    const i3 = i * 3;
+
+    positions.current[i3] =
+      (Math.random() - 0.5) * 7;
+
+    positions.current[i3 + 1] =
+      (Math.random() - 0.5) * 7;
+
+    positions.current[i3 + 2] =
+      (Math.random() - 0.5) * 3;
+  }
+
+  useFrame((state, delta) => {
+    if (
+      !points.current ||
+      reduced
+    ) {
+      return;
+    }
+
+    points.current.rotation.y +=
+      delta * 0.012;
+  });
+
   return (
-    <points ref={ref}>
+    <points ref={points}>
       <bufferGeometry>
         <bufferAttribute
           attach="attributes-position"
           count={count}
-          array={positions}
+          array={positions.current}
           itemSize={3}
         />
       </bufferGeometry>
 
       <pointsMaterial
-        size={0.022}
         color={ACCENT}
+        size={0.025}
         transparent
-        opacity={0.22}
+        opacity={0.55}
         sizeAttenuation
       />
     </points>
   );
 }
 
+
 /* =========================================================
-   ANIMATED SIGNALS
+   SIGNAL PARTICLES
 ========================================================= */
 
 function SignalParticles({
   reduced,
   activeIndex,
 }) {
-  const refs = useRef([]);
+  const group = useRef();
 
-  const paths = useMemo(() => {
-    return HERO_MODULES.map(
-      (_, index) => {
-        const angle =
-          (index /
-            HERO_MODULES.length) *
-          Math.PI *
-          2;
-
-        return {
-          start:
-            new THREE.Vector3(
-              0,
-              0,
-              0
-            ),
-
-          end:
-            new THREE.Vector3(
-              Math.cos(angle) *
-                2.1,
-
-              Math.sin(angle) *
-                1.4,
-
-              0
-            ),
-        };
-      }
-    );
-  }, []);
-
-  useFrame(
-    (state) => {
-      if (reduced) return;
-
-      refs.current.forEach(
-        (mesh, index) => {
-          if (!mesh) return;
-
-          const path =
-            paths[index];
-
-          const progress =
-            (state.clock.elapsedTime *
-              0.32 +
-              index * 0.12) %
-            1;
-
-          mesh.position.lerpVectors(
-            path.start,
-            path.end,
-            progress
-          );
-
-          const scale =
-            activeIndex === index
-              ? 1.5
-              : 0.7;
-
-          mesh.scale.setScalar(
-            scale
-          );
-        }
-      );
+  useFrame((state, delta) => {
+    if (
+      !group.current ||
+      reduced
+    ) {
+      return;
     }
-  );
+
+    group.current.rotation.y +=
+      delta * 0.025;
+  });
+
+  const points = [
+    [-2.4, 0.7, 0],
+    [2.3, 1.2, 0],
+    [-2.1, -1.4, 0],
+    [2.4, -1.2, 0],
+    [0.3, 2.2, 0],
+    [-0.4, -2.2, 0],
+  ];
 
   return (
-    <>
-      {paths.map(
-        (_, index) => (
+    <group ref={group}>
+      {points.map(
+        (position, index) => (
           <mesh
             key={index}
-            ref={(node) => {
-              refs.current[index] =
-                node;
-            }}
+            position={position}
+            scale={
+              activeIndex !== null
+                ? 1.3
+                : 1
+            }
           >
             <sphereGeometry
-              args={[
-                0.035,
-                8,
-                8,
-              ]}
+              args={[0.055, 12, 12]}
             />
 
             <meshBasicMaterial
               color={ACCENT}
               transparent
-              opacity={
-                activeIndex ===
-                index
-                  ? 0.95
-                  : 0.55
-              }
+              opacity={0.7}
             />
           </mesh>
         )
       )}
-    </>
+    </group>
   );
 }
 
+
 /* =========================================================
-   3D SCENE
+   DESKTOP 3D SCENE
 ========================================================= */
 
 function Scene({
   reduced,
   activeIndex,
-  mobile,
 }) {
   const group = useRef();
 
@@ -505,8 +407,9 @@ function Scene({
     useThree();
 
   useFrame(() => {
-    if (!group.current)
+    if (!group.current) {
       return;
+    }
 
     if (!reduced) {
       const targetX =
@@ -517,28 +420,22 @@ function Scene({
 
       group.current.rotation.x +=
         (targetX -
-          group.current.rotation
-            .x) *
+          group.current.rotation.x) *
         0.035;
 
       group.current.rotation.y +=
         (targetY -
-          group.current.rotation
-            .y) *
+          group.current.rotation.y) *
         0.035;
 
       group.current.position.x +=
-        pointer.x *
-          0.04 -
-        group.current.position
-          .x *
+        pointer.x * 0.04 -
+        group.current.position.x *
           0.025;
 
       group.current.position.y +=
-        pointer.y *
-          0.025 -
-        group.current.position
-          .y *
+        pointer.y * 0.025 -
+        group.current.position.y *
           0.025;
     }
   });
@@ -546,7 +443,7 @@ function Scene({
   return (
     <group ref={group}>
       <ParticleField
-        count={mobile ? 55 : 130}
+        count={130}
         reduced={reduced}
       />
 
@@ -556,9 +453,7 @@ function Scene({
 
       <SignalParticles
         reduced={reduced}
-        activeIndex={
-          activeIndex
-        }
+        activeIndex={activeIndex}
       />
 
       <WordPressCore
@@ -571,65 +466,15 @@ function Scene({
   );
 }
 
+
 /* =========================================================
-   CARD POSITIONS
-
-   IMPORTANT:
-   These are CSS positions rather than
-   3D Html positions.
-
-   This guarantees that cards don't
-   collide unpredictably.
+   DESKTOP CARD POSITIONING
+   UNCHANGED CONCEPTUALLY
 ========================================================= */
 
-function getCardPosition(
-  index,
-  mobile
+function getDesktopCardPosition(
+  index
 ) {
-  if (mobile) {
-    const positions = [
-      {
-        left: "3%",
-        top: "19%",
-      },
-      {
-        right: "3%",
-        top: "19%",
-      },
-      {
-        left: "0%",
-        top: "39%",
-      },
-      {
-        right: "0%",
-        top: "39%",
-      },
-      {
-        left: "4%",
-        bottom: "15%",
-      },
-      {
-        right: "4%",
-        bottom: "15%",
-      },
-      {
-        left: "27%",
-        bottom: "2%",
-      },
-      {
-        right: "27%",
-        bottom: "2%",
-      },
-    ];
-
-    return (
-      positions[
-        index %
-          positions.length
-      ] || positions[0]
-    );
-  }
-
   const positions = [
     {
       left: "4%",
@@ -680,22 +525,21 @@ function getCardPosition(
   );
 }
 
+
 /* =========================================================
-   CAPABILITY CARD
+   DESKTOP CAPABILITY CARD
 ========================================================= */
 
-function CapabilityCard({
+function DesktopCapabilityCard({
   mod,
   index,
   active,
   onEnter,
   onLeave,
-  mobile,
 }) {
   const position =
-    getCardPosition(
-      index,
-      mobile
+    getDesktopCardPosition(
+      index
     );
 
   return (
@@ -703,12 +547,9 @@ function CapabilityCard({
       onMouseEnter={() =>
         onEnter(index)
       }
-      onMouseLeave={
-        onLeave
-      }
+      onMouseLeave={onLeave}
       style={{
-        position:
-          "absolute",
+        position: "absolute",
 
         ...position,
 
@@ -716,33 +557,22 @@ function CapabilityCard({
           ? 30
           : 10,
 
-        width: mobile
-          ? 105
-          : 150,
+        width: 150,
 
-        minHeight:
-          mobile
-            ? 54
-            : 74,
+        minHeight: 74,
 
         padding:
-          mobile
-            ? "9px 10px"
-            : "12px 13px",
+          "12px 13px",
 
-        borderRadius:
-          mobile
-            ? 12
-            : 15,
+        borderRadius: 15,
 
         border: active
           ? `1px solid ${ACCENT}`
           : "1px solid rgba(23,22,27,.1)",
 
-        background:
-          active
-            ? ACCENT
-            : "rgba(255,255,255,.72)",
+        background: active
+          ? ACCENT
+          : "rgba(255,255,255,.72)",
 
         backdropFilter:
           "blur(18px)",
@@ -764,46 +594,28 @@ function CapabilityCard({
         cursor: "pointer",
       }}
     >
-      {/* top row */}
-
       <div
         style={{
           display: "flex",
-
-          alignItems:
-            "center",
-
+          alignItems: "center",
           gap: 8,
         }}
       >
-        {/* icon */}
-
         <div
           style={{
-            width: mobile
-              ? 22
-              : 28,
-
-            height: mobile
-              ? 22
-              : 28,
-
+            width: 28,
+            height: 28,
             flexShrink: 0,
 
             borderRadius: 8,
 
             display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
 
-            alignItems:
-              "center",
-
-            justifyContent:
-              "center",
-
-            background:
-              active
-                ? "rgba(255,255,255,.15)"
-                : "rgba(30,63,214,.07)",
+            background: active
+              ? "rgba(255,255,255,.15)"
+              : "rgba(30,63,214,.07)",
 
             color: active
               ? WHITE
@@ -812,10 +624,7 @@ function CapabilityCard({
             fontFamily:
               "var(--font-mono)",
 
-            fontSize: mobile
-              ? 9
-              : 11,
-
+            fontSize: 11,
             fontWeight: 700,
           }}
         >
@@ -824,16 +633,12 @@ function CapabilityCard({
           ).padStart(2, "0")}
         </div>
 
-        {/* label */}
-
         <div
           style={{
             fontFamily:
               "var(--font-mono)",
 
-            fontSize: mobile
-              ? 7.5
-              : 8.5,
+            fontSize: 8.5,
 
             letterSpacing:
               ".1em",
@@ -852,32 +657,26 @@ function CapabilityCard({
         </div>
       </div>
 
-      {/* description */}
+      <div
+        style={{
+          marginTop: 7,
 
-      {!mobile && (
-        <div
-          style={{
-            marginTop: 7,
+          fontFamily:
+            "var(--font-body)",
 
-            fontFamily:
-              "var(--font-body)",
+          fontSize: 9.5,
 
-            fontSize: 9.5,
+          lineHeight: 1.4,
 
-            lineHeight: 1.4,
+          color: active
+            ? "rgba(255,255,255,.78)"
+            : "rgba(23,22,27,.58)",
 
-            color: active
-              ? "rgba(255,255,255,.78)"
-              : "rgba(23,22,27,.58)",
-
-            maxWidth: 120,
-          }}
-        >
-          {mod.desc}
-        </div>
-      )}
-
-      {/* active indicator */}
+          maxWidth: 120,
+        }}
+      >
+        {mod.desc}
+      </div>
 
       {active && (
         <div
@@ -891,22 +690,16 @@ function CapabilityCard({
             width: 13,
             height: 13,
 
-            borderRadius:
-              "50%",
+            borderRadius: "50%",
 
             border:
               "1px solid rgba(255,255,255,.65)",
 
             display: "flex",
-
-            alignItems:
-              "center",
-
-            justifyContent:
-              "center",
+            alignItems: "center",
+            justifyContent: "center",
 
             fontSize: 7,
-
             color: WHITE,
           }}
         >
@@ -916,6 +709,530 @@ function CapabilityCard({
     </div>
   );
 }
+
+
+/* =========================================================
+   MOBILE WORDPRESS CORE
+   NO THREE.JS
+========================================================= */
+
+function MobileCore() {
+  return (
+    <div
+      style={{
+        position: "relative",
+
+        width: "100%",
+
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+
+        padding:
+          "1rem 0 2rem",
+      }}
+    >
+      {/* Ambient glow */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+
+          width: 230,
+          height: 230,
+
+          top: 5,
+
+          borderRadius: "50%",
+
+          background:
+            "radial-gradient(circle, rgba(30,63,214,.12), rgba(30,63,214,0) 68%)",
+
+          filter: "blur(12px)",
+
+          pointerEvents: "none",
+        }}
+      />
+
+      {/* Core graphic */}
+      <div
+        style={{
+          position: "relative",
+
+          width: 150,
+          height: 150,
+
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        {/* Outer circle */}
+        <div
+          style={{
+            position: "absolute",
+
+            inset: 0,
+
+            borderRadius: "50%",
+
+            border:
+              "1px solid rgba(30,63,214,.22)",
+
+            boxShadow:
+              "0 0 45px rgba(30,63,214,.10)",
+          }}
+        />
+
+        {/* Technical ring */}
+        <div
+          style={{
+            position: "absolute",
+
+            inset: 12,
+
+            borderRadius: "50%",
+
+            border:
+              "1px dashed rgba(30,63,214,.35)",
+
+            transform:
+              "rotate(-18deg)",
+          }}
+        />
+
+        {/* Inner core */}
+        <div
+          style={{
+            position: "relative",
+
+            width: 92,
+            height: 92,
+
+            borderRadius: "50%",
+
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+
+            background:
+              "radial-gradient(circle at 35% 30%, #ffffff 0%, #f8f9ff 52%, #e8ecff 100%)",
+
+            border:
+              "1px solid rgba(30,63,214,.2)",
+
+            boxShadow:
+              "0 15px 45px rgba(30,63,214,.15)",
+          }}
+        >
+          <div
+            style={{
+              fontFamily:
+                "var(--font-display)",
+
+              fontSize: 30,
+
+              fontWeight: 800,
+
+              lineHeight: 1,
+
+              letterSpacing:
+                "-.07em",
+
+              color: DARK,
+            }}
+          >
+            WP
+          </div>
+
+          <div
+            style={{
+              marginTop: 5,
+
+              fontFamily:
+                "var(--font-mono)",
+
+              fontSize: 7,
+
+              letterSpacing:
+                ".2em",
+
+              color: ACCENT,
+            }}
+          >
+            ENGINE
+          </div>
+        </div>
+
+        {/* Signal points */}
+        {[
+          {
+            top: 13,
+            left: 24,
+          },
+          {
+            top: 34,
+            right: 5,
+          },
+          {
+            bottom: 18,
+            left: 10,
+          },
+          {
+            bottom: 2,
+            right: 36,
+          },
+        ].map(
+          (point, index) => (
+            <span
+              key={index}
+              style={{
+                position:
+                  "absolute",
+
+                ...point,
+
+                width: 6,
+                height: 6,
+
+                borderRadius:
+                  "50%",
+
+                background:
+                  ACCENT,
+
+                boxShadow:
+                  "0 0 12px rgba(30,63,214,.55)",
+              }}
+            />
+          )
+        )}
+      </div>
+
+      {/* Status */}
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 8,
+
+          marginTop: 12,
+
+          fontFamily:
+            "var(--font-mono)",
+
+          fontSize: 8,
+
+          letterSpacing:
+            ".14em",
+
+          color:
+            "var(--charcoal-soft)",
+
+          textTransform:
+            "uppercase",
+        }}
+      >
+        <span
+          style={{
+            width: 6,
+            height: 6,
+
+            borderRadius: "50%",
+
+            background: ACCENT,
+
+            boxShadow:
+              "0 0 10px rgba(30,63,214,.7)",
+          }}
+        />
+
+        System Online
+      </div>
+    </div>
+  );
+}
+
+
+/* =========================================================
+   MOBILE CAPABILITY LIST
+   INTENTIONAL - NOT FLOATING
+========================================================= */
+
+function MobileCapabilityList() {
+  return (
+    <div
+      style={{
+        width: "100%",
+
+        padding:
+          "0 1rem 1.5rem",
+      }}
+    >
+      {/* Section heading */}
+      <div
+        style={{
+          display: "flex",
+          alignItems: "flex-end",
+          justifyContent:
+            "space-between",
+
+          marginBottom:
+            "1rem",
+        }}
+      >
+        <div>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 8,
+
+              marginBottom: 8,
+
+              fontFamily:
+                "var(--font-mono)",
+
+              fontSize: 8,
+
+              letterSpacing:
+                ".16em",
+
+              textTransform:
+                "uppercase",
+
+              color:
+                "var(--charcoal-soft)",
+            }}
+          >
+            <span
+              style={{
+                width: 5,
+                height: 5,
+
+                borderRadius:
+                  "50%",
+
+                background:
+                  ACCENT,
+              }}
+            />
+
+            Engineering Stack
+          </div>
+
+          <h2
+            style={{
+              margin: 0,
+
+              fontFamily:
+                "var(--font-display)",
+
+              fontSize:
+                "clamp(1.7rem, 7vw, 2.2rem)",
+
+              lineHeight: 1.05,
+
+              letterSpacing:
+                "-.045em",
+
+              color: DARK,
+
+              maxWidth: 280,
+            }}
+          >
+            What I build
+            <br />
+            with WordPress.
+          </h2>
+        </div>
+
+        <div
+          style={{
+            fontFamily:
+              "var(--font-mono)",
+
+            fontSize: 9,
+
+            letterSpacing:
+              ".12em",
+
+            color: ACCENT,
+
+            paddingBottom: 4,
+
+            whiteSpace:
+              "nowrap",
+          }}
+        >
+          08 MODULES
+        </div>
+      </div>
+
+      {/* Cards */}
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+
+          gap: 10,
+        }}
+      >
+        {HERO_MODULES.map(
+          (mod, index) => (
+            <div
+              key={mod.id}
+              style={{
+                display: "grid",
+
+                gridTemplateColumns:
+                  "44px 1fr auto",
+
+                alignItems: "center",
+
+                gap: 12,
+
+                minHeight: 72,
+
+                padding:
+                  "12px 14px",
+
+                border:
+                  "1px solid rgba(23,22,27,.1)",
+
+                borderRadius: 16,
+
+                background:
+                  "rgba(255,255,255,.72)",
+
+                boxShadow:
+                  "0 8px 28px rgba(23,22,27,.045)",
+
+                backdropFilter:
+                  "blur(14px)",
+
+                WebkitBackdropFilter:
+                  "blur(14px)",
+              }}
+            >
+              {/* Number */}
+              <div
+                style={{
+                  width: 44,
+                  height: 44,
+
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+
+                  borderRadius: 12,
+
+                  background:
+                    "rgba(30,63,214,.07)",
+
+                  color: ACCENT,
+
+                  fontFamily:
+                    "var(--font-mono)",
+
+                  fontSize: 11,
+
+                  fontWeight: 700,
+                }}
+              >
+                {String(
+                  index + 1
+                ).padStart(2, "0")}
+              </div>
+
+              {/* Content */}
+              <div
+                style={{
+                  minWidth: 0,
+                }}
+              >
+                <div
+                  style={{
+                    fontFamily:
+                      "var(--font-mono)",
+
+                    fontSize: 10,
+
+                    letterSpacing:
+                      ".12em",
+
+                    textTransform:
+                      "uppercase",
+
+                    color: DARK,
+
+                    lineHeight: 1.2,
+
+                    marginBottom: 5,
+                  }}
+                >
+                  {mod.label}
+                </div>
+
+                <div
+                  style={{
+                    fontFamily:
+                      "var(--font-body)",
+
+                    fontSize: 11,
+
+                    lineHeight: 1.4,
+
+                    color:
+                      "rgba(23,22,27,.56)",
+
+                    display:
+                      "-webkit-box",
+
+                    WebkitLineClamp: 2,
+
+                    WebkitBoxOrient:
+                      "vertical",
+
+                    overflow:
+                      "hidden",
+                  }}
+                >
+                  {mod.desc}
+                </div>
+              </div>
+
+              {/* Arrow */}
+              <div
+                style={{
+                  width: 28,
+                  height: 28,
+
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+
+                  borderRadius: "50%",
+
+                  border:
+                    "1px solid rgba(30,63,214,.15)",
+
+                  color: ACCENT,
+
+                  fontSize: 12,
+                }}
+              >
+                ↗
+              </div>
+            </div>
+          )
+        )}
+      </div>
+    </div>
+  );
+}
+
 
 /* =========================================================
    MAIN HERO SCENE
@@ -928,44 +1245,67 @@ export default function HeroScene({
   const [activeIndex, setActiveIndex] =
     useState(null);
 
+  /* =======================================================
+     MOBILE
+     
+     IMPORTANT:
+     NO CANVAS.
+     NO 3D.
+     NO ABSOLUTE FLOATING CARDS.
+  ======================================================= */
+
+  if (mobile) {
+    return (
+      <div
+        style={{
+          width: "100%",
+          height: "auto",
+
+          position: "relative",
+
+          overflow: "hidden",
+
+          paddingTop: 12,
+        }}
+      >
+        <MobileCore />
+
+        <MobileCapabilityList />
+      </div>
+    );
+  }
+
+  /* =======================================================
+     DESKTOP
+     
+     Existing 3D experience remains.
+  ======================================================= */
+
   return (
     <div
       style={{
-        position:
-          "relative",
+        position: "relative",
 
         width: "100%",
-
         height: "100%",
 
-        overflow:
-          "visible",
+        minHeight: 560,
+
+        overflow: "visible",
       }}
     >
-      {/* =================================================
-          TOP LABEL
-      ================================================= */}
-
+      {/* Top label */}
       <div
         style={{
-          position:
-            "absolute",
+          position: "absolute",
 
-          right: mobile
-            ? 8
-            : 22,
-
-          top: mobile
-            ? 8
-            : 18,
+          right: 22,
+          top: 18,
 
           zIndex: 40,
 
           display: "flex",
-
-          alignItems:
-            "center",
-
+          alignItems: "center",
           gap: 7,
 
           fontFamily:
@@ -1005,10 +1345,7 @@ export default function HeroScene({
         Interactive System
       </div>
 
-      {/* =================================================
-          CANVAS
-      ================================================= */}
-
+      {/* 3D Canvas */}
       <div
         style={{
           position:
@@ -1023,23 +1360,15 @@ export default function HeroScene({
         }}
       >
         <Canvas
-          dpr={
-            mobile
-              ? [1, 1.25]
-              : [1, 1.6]
-          }
+          dpr={[1, 1.6]}
           camera={{
             position: [
               0,
               0,
-              mobile
-                ? 7
-                : 7.8,
+              7.8,
             ],
 
-            fov: mobile
-              ? 49
-              : 44,
+            fov: 44,
           }}
           gl={{
             antialias: true,
@@ -1078,21 +1407,14 @@ export default function HeroScene({
             activeIndex={
               activeIndex
             }
-            mobile={mobile}
           />
         </Canvas>
       </div>
 
-      {/* =================================================
-          CENTER WORDPRESS MARK
-
-          HTML makes the typography perfectly crisp.
-      ================================================= */}
-
+      {/* Center WP mark */}
       <div
         style={{
-          position:
-            "absolute",
+          position: "absolute",
 
           left: "50%",
           top: "50%",
@@ -1105,25 +1427,18 @@ export default function HeroScene({
           pointerEvents:
             "none",
 
-          textAlign:
-            "center",
+          textAlign: "center",
         }}
       >
         <div
           style={{
-            width: mobile
-              ? 72
-              : 92,
-
-            height: mobile
-              ? 72
-              : 92,
+            width: 92,
+            height: 92,
 
             borderRadius:
               "50%",
 
             display: "flex",
-
             flexDirection:
               "column",
 
@@ -1150,9 +1465,7 @@ export default function HeroScene({
 
               fontWeight: 800,
 
-              fontSize: mobile
-                ? 21
-                : 27,
+              fontSize: 27,
 
               letterSpacing:
                 "-.07em",
@@ -1168,9 +1481,7 @@ export default function HeroScene({
               fontFamily:
                 "var(--font-mono)",
 
-              fontSize: mobile
-                ? 6
-                : 7,
+              fontSize: 7,
 
               letterSpacing:
                 ".18em",
@@ -1185,20 +1496,14 @@ export default function HeroScene({
         </div>
       </div>
 
-      {/* =================================================
-          STATUS
-      ================================================= */}
-
+      {/* Status */}
       <div
         style={{
-          position:
-            "absolute",
+          position: "absolute",
 
           left: "50%",
 
-          top: mobile
-            ? "68%"
-            : "69%",
+          top: "69%",
 
           transform:
             "translateX(-50%)",
@@ -1207,8 +1512,7 @@ export default function HeroScene({
 
           display: "flex",
 
-          alignItems:
-            "center",
+          alignItems: "center",
 
           gap: 7,
 
@@ -1249,13 +1553,10 @@ export default function HeroScene({
         SYSTEM ONLINE
       </div>
 
-      {/* =================================================
-          CAPABILITY CARDS
-      ================================================= */}
-
+      {/* Desktop cards */}
       {HERO_MODULES.map(
         (mod, index) => (
-          <CapabilityCard
+          <DesktopCapabilityCard
             key={mod.id}
             mod={mod}
             index={index}
@@ -1271,27 +1572,17 @@ export default function HeroScene({
                 null
               )
             }
-            mobile={mobile}
           />
         )
       )}
 
-      {/* =================================================
-          BOTTOM BUILD / CUSTOMIZE / LAUNCH
-      ================================================= */}
-
+      {/* Bottom label */}
       <div
         style={{
-          position:
-            "absolute",
+          position: "absolute",
 
-          right: mobile
-            ? 8
-            : 20,
-
-          bottom: mobile
-            ? 8
-            : 18,
+          right: 20,
+          bottom: 18,
 
           zIndex: 40,
 

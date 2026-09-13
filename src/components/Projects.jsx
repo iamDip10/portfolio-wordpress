@@ -173,7 +173,7 @@ export default function Projects() {
           </div>
           <h2 className="section-title">Projects</h2>
           <p className="section-sub">
-            Real builds — WordPress tools shipped into production, and
+            Real builds - WordPress tools shipped into production, and
             full-stack platforms built end-to-end.
           </p>
         </div>

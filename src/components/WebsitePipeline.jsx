@@ -17,7 +17,7 @@ export default function WebsitePipeline() {
           </div>
           <h2 className="section-title">From blank canvas to production.</h2>
           <p className="section-sub">
-            Not isolated WordPress tasks — the complete build, start to
+            Not isolated WordPress tasks - the complete build, start to
             finish.
           </p>
         </div>

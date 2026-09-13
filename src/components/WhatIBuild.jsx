@@ -100,7 +100,7 @@ export default function WhatIBuild() {
           <h2 className="section-title">What I build inside WordPress.</h2>
           <p className="section-sub">
             Not installing plugins. Building the functionality that doesn't
-            exist yet — and the complete websites that run on top of it.
+            exist yet - and the complete websites that run on top of it.
           </p>
         </div>
 

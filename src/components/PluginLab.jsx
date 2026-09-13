@@ -88,7 +88,7 @@ export default function PluginLab() {
               </h2>
               <p className="section-sub">
                 Off-the-shelf plugins solve generic problems. Real businesses
-                need specific ones — custom logic, wired into WordPress the
+                need specific ones - custom logic, wired into WordPress the
                 way it was designed to be extended.
               </p>
             </div>

@@ -1,6 +1,6 @@
 // ─────────────────────────────────────────────────────────────────────────
 // Central content source. Every string here reflects real information
-// already present in Dip Saha's portfolio. Nothing here is fabricated —
+// already present in Dip Saha's portfolio. Nothing here is fabricated -
 // no invented clients, metrics, revenue, testimonials or awards.
 // ─────────────────────────────────────────────────────────────────────────
 
@@ -173,7 +173,7 @@ export const WEBSITE_PIPELINE = [
   { stage: "DEPLOYMENT", detail: "Shipped to production and handed over, documented." },
 ];
 
-// "Things I can make WordPress do" — capability modules.
+// "Things I can make WordPress do" - capability modules.
 export const CAPABILITY_MODULES = [
   { title: "Custom Plugins", desc: "Purpose-built functionality, from scratch." },
   { title: "Custom Admin Panels", desc: "Settings screens built for how a client actually works." },
@@ -191,10 +191,10 @@ export const CAPABILITY_MODULES = [
   { title: "Third-Party Integrations", desc: "Payments, CRMs, mapping, and messaging platforms." },
 ];
 
-// Real projects — preserved from the existing portfolio content.
+// Real projects - preserved from the existing portfolio content.
 export const PROJECTS = [
   {
-    name: "TogglePilot — Admin Module Manager",
+    name: "TogglePilot - Admin Module Manager",
     tagline: "Real-Time WordPress Extension Management & Troubleshooting",
     description:
       "A lightweight WordPress tool for quickly managing extensions directly from the admin bar.",
@@ -216,7 +216,7 @@ export const PROJECTS = [
     name: "WP Support Monitor",
     tagline: "Real-Time WordPress Support Forum Tracker",
     description:
-      "A Chrome Extension built to monitor WordPress.org support forums in real time — tracking new tickets and customer replies awaiting response.",
+      "A Chrome Extension built to monitor WordPress.org support forums in real time - tracking new tickets and customer replies awaiting response.",
     tech: ["JavaScript", "Chrome Extensions", "Manifest V3", "Chrome Alarms API", "Chrome Notifications API"],
     role: "Built for real-world WordPress support workflows, where response time matters.",
     features: [
@@ -268,26 +268,7 @@ export const PROJECTS = [
     demoLabel: "View Live Site",
     comingSoon: false,
     category: "Client Website",
-  },
-  {
-    name: "SupportDesk",
-    tagline: "Customer Support Ticketing System",
-    description:
-      "A scalable, async-first ticketing system built for high-volume customer support operations. Features real-time updates via Celery/Redis, priority queuing, and SLA tracking.",
-    tech: ["Django", "PostgreSQL", "Redis", "Celery"],
-    role: "In active development.",
-    features: [
-      "Async task processing with Celery.",
-      "Real-time ticket status updates.",
-      "Priority queuing & SLA tracking, with agent performance analytics.",
-    ],
-    color: "#57534e",
-    github: "https://github.com/dipsaha",
-    demo: "",
-    demoLabel: "",
-    comingSoon: true,
-    category: "In Progress",
-  },
+  }
 ];
 
 export const EXPERIENCE = [
