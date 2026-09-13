@@ -380,6 +380,10 @@ button {
   transform: translateY(-2px);
 }
 
+#reviews {
+  padding-top: clamp(2rem, 3vw, 3rem);
+}
+
 /* ── Responsive helpers ───────────────────────────────────────────── */
 @media (max-width: 720px) {
   .section {

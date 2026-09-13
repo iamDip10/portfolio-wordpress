@@ -338,3 +338,15 @@ export const CONTACT_LINKS = [
     href: "https://github.com/iamDip10/",
   },
 ];
+// Real Trustpilot review screenshots, carried over from the existing portfolio.
+export const REVIEWS = [
+  { id: 1, image: "https://snipboard.io/ZsnMhR.jpg", platform: "Trustpilot" },
+  { id: 2, image: "https://snipboard.io/pcWJoM.jpg", platform: "Trustpilot" },
+  { id: 3, image: "https://snipboard.io/GrSMcC.jpg", platform: "Trustpilot" },
+  { id: 4, image: "https://snipboard.io/8kZPSw.jpg", platform: "Trustpilot" },
+  { id: 5, image: "https://snipboard.io/B9GDzH.jpg", platform: "Trustpilot" },
+  { id: 6, image: "https://snipboard.io/dEuwWJ.jpg", platform: "Trustpilot" },
+  { id: 7, image: "https://snipboard.io/dupVi1.jpg", platform: "Trustpilot" },
+  { id: 8, image: "https://snipboard.io/gL7pZt.jpg", platform: "Trustpilot" },
+  { id: 9, image: "https://snipboard.io/H6YfXE.jpg", platform: "Trustpilot" },
+];

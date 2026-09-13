@@ -11,6 +11,7 @@ import Customization from "./components/Customization";
 import WebsitePipeline from "./components/WebsitePipeline";
 import Ecosystem from "./components/Ecosystem";
 import Projects from "./components/Projects";
+import Reviews from "./components/Reviews";
 import CapabilityLab from "./components/CapabilityLab";
 import Experience from "./components/Experience";
 import Contact from "./components/Contact";
@@ -50,6 +51,7 @@ export default function App() {
       <WebsitePipeline />
       <Ecosystem />
       <Projects />
+      <Reviews />
       <CapabilityLab />
       <Experience />
       <Contact />
